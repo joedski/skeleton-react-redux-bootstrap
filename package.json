@@ -4,7 +4,10 @@
   "description": "Simple project skeleton for React-redux based client side apps with Bootstrap styles.  (React Bootstrap sold separately.)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cross-env NODE_ENV=test mocha --recursive --compilers js:babel-register",
+    "build": "cross-env NODE_ENV=production gulp",
+    "build-debug": "cross-env NODE_ENV=debug gulp",
+    "watch": "cross-env NODE_ENV=debug gulp watch"
   },
   "keywords": [
     "react",
@@ -47,12 +50,15 @@
     "babel-preset-stage-0": "^6.5.0",
     "babelify": "^7.3.0",
     "browserify": "^13.1.0",
+    "cross-env": "^2.0.0",
     "eslint-plugin-react": "^5.2.2",
+    "expect": "^1.20.2",
     "gulp": "^3.9.1",
     "gulp-less": "^3.1.0",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-util": "^3.0.7",
     "less-plugin-autoprefix": "^1.5.1",
+    "mocha": "^2.5.3",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
   },

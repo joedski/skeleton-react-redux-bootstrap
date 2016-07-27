@@ -5,7 +5,7 @@ import MessageForm from './MessageForm';
 const App = ( props ) => {
 	return (
 		<div className="container">
-			<h1>{ props.message }</h1>
+			<h1>{ props.message.trim() }</h1>
 			<MessageForm />
 		</div>
 	);

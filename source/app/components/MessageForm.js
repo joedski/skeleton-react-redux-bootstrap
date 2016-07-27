@@ -58,9 +58,14 @@ class MessageForm extends React.Component {
 	}
 
 	componentWillReceiveProps( nextProps ) {
-		this.setState({
-			message: nextProps.message,
-		});
+		let nextState = {};
+
+		// Only resync message if the new message is actually different from the previous.
+		if( nextProps.message !== this.props.message ) {
+			nextState.message = nextProps.message;
+		}
+
+		this.setState( nextState );
 	}
 }
 
