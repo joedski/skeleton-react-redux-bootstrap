@@ -1,6 +1,6 @@
 {
   "name": "skeleton-react-redux-bootstrap",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Simple project skeleton for React-redux based client side apps with Bootstrap styles.  (React Bootstrap sold separately.)",
   "main": "index.js",
   "scripts": {
