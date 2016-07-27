@@ -69,6 +69,10 @@ MessageForm.propTypes = {
 	onUpdate: React.PropTypes.func,
 };
 
+// NOTE: In a larger app you would (usually!) create separate connected components from
+// the normal layout components, but it's not always immediately clear when to do that,
+// so starting out in the same file like this is reasonable.
+
 function mapState( state ) {
 	return {
 		message: state.message,
@@ -83,7 +87,6 @@ function mapDispatch( dispatch ) {
 	}
 }
 
-// NOTE: In a larger app you might create separate connected components from the normal layout components.
 const CurrentMessageForm = connect( mapState, mapDispatch )( MessageForm );
 
 export default CurrentMessageForm;
