@@ -5,4 +5,13 @@ This is a simple skeleton to start out a barebones React + Redux app with Bootst
 
 
 
+Dependencies
+------------
+
+### Global Dev Deps
+
+- [`eslint-plugin-react`](https://github.com/yannickcr/eslint-plugin-react)
+
+
+
 [react-bootstrap]: https://react-bootstrap.github.io/

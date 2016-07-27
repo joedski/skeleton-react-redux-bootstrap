@@ -15,7 +15,10 @@
   "author": "Joseph Sikorski <joedski@gmail.com>",
   "license": "ISC",
   "eslintConfig": {
-    "extends": "eslint:recommended",
+    "extends": [
+      "eslint:recommended",
+      "plugin:react/recommended"
+    ],
     "parser": "babel-eslint",
     "parserOptions": {
       "ecmaVersion": 6,
@@ -26,6 +29,9 @@
         "modules": true
       }
     },
+    "plugins": [
+      "react"
+    ],
     "env": {
       "browser": true,
       "node": true,
@@ -41,6 +47,7 @@
     "babel-preset-stage-0": "^6.5.0",
     "babelify": "^7.3.0",
     "browserify": "^13.1.0",
+    "eslint-plugin-react": "^5.2.2",
     "gulp": "^3.9.1",
     "gulp-less": "^3.1.0",
     "gulp-sourcemaps": "^1.6.0",
