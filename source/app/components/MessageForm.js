@@ -83,6 +83,7 @@ function mapDispatch( dispatch ) {
 	}
 }
 
+// NOTE: In a larger app you might create separate connected components from the normal layout components.
 const CurrentMessageForm = connect( mapState, mapDispatch )( MessageForm );
 
 export default CurrentMessageForm;
