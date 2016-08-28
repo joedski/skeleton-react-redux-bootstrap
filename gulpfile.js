@@ -2,32 +2,31 @@
 
 'use strict';
 
-let path = require( 'path' );
+const path = require( 'path' );
 
-let gulp = require( 'gulp' );
-let less = require( 'gulp-less' );
-let sourcemaps = require( 'gulp-sourcemaps' );
+const gulp = require( 'gulp' );
+const gutil = require( 'gulp-util' );
+const less = require( 'gulp-less' );
+const sourcemaps = require( 'gulp-sourcemaps' );
 
-let LessAutoprefix = require( 'less-plugin-autoprefix' );
-let autoprefix = new LessAutoprefix({ browsers: [ 'last 2 versions' ] });
+const postcss = require( 'gulp-postcss' );
+const autoprefixer = require( 'autoprefixer' );
+const cssnano = require( 'cssnano' );
 
-let source = require( 'vinyl-source-stream' );
-let buffer = require( 'vinyl-buffer' );
-let browserify = require( 'browserify' );
-let babelify = require( 'babelify' );
+const source = require( 'vinyl-source-stream' );
+const buffer = require( 'vinyl-buffer' );
+const browserify = require( 'browserify' );
 
 
 
 //////// Settings
 
-let sourceDir = 'source';
-let outputDir = 'public';
-let stylesSourceDir = 'styles';
-let stylesOutputDir = 'styles';
-let scriptsOutputDir = 'scripts';
+const sourceDir = 'client';
+const outputDir = 'public';
+const scriptsSourceDir = 'app';
+const stylesSourceDir = 'styles';
 
-let envProduction = process.NODE_ENV === 'production';
-// let envDebug = process.NODE_ENV === 'debug' || process.NODE_ENV === '';
+const buildEnv = process.NODE_ENV;
 
 
 
@@ -51,9 +50,7 @@ gulp.task( 'watch-site', () => {
 		'site:styles',
 	]);
 
-	gulp.watch([ `${ sourceDir }/app/**/*` ], [
-		'site:scripts',
-	]);
+	site_scripts_main( true );
 });
 
 
@@ -64,31 +61,47 @@ gulp.task( 'site:scripts', [
 	'site:scripts:main'
 ]);
 
-gulp.task( 'site:scripts:main', () => {
-	let stream = browserify( `${ sourceDir }/app/index.js`, { debug: envProduction === false })
-		.transform( babelify )
-		.bundle()
-		.on( 'error', function( err ) {
-			console.error( err.message );
-			if( err.codeFrame ) console.error( err.codeFrame );
-			this.emit( 'end' );
-		})
-		.pipe( source( 'app.js' ) )
-		.pipe( buffer() )
+gulp.task( 'site:scripts:main', site_scripts_main );
+
+function site_scripts_main( watch ) {
+	let bundler = browserify( `${ sourceDir }/${ scriptsSourceDir }/index.js`, {
+		debug: buildEnv !== 'production',
+		cache: {}, packageCache: {}
+	})
+		.transform( 'babelify' )
 		;
 
-	if( envProduction === false ) {
-		stream = stream
-			.pipe( sourcemaps.init({ loadMaps: true }) )
-			.pipe( sourcemaps.write( './' ) )
+	if( watch ) {
+		bundler = bundler.plugin( 'watchify' );
 	}
 
-	stream = stream
-		.pipe( gulp.dest( `${ outputDir }/${ scriptsOutputDir }` ) )
-		;
+	return execBundle();
 
-	return stream;
-});
+	function execBundle() {
+		let stream = bundler
+			.bundle()
+			.on( 'error', function( err ) {
+				console.error( err.message );
+				if( err.codeFrame ) console.error( err.codeFrame );
+				this.emit( 'end' );
+			})
+			.pipe( source( 'app.js' ) )
+			.pipe( buffer() )
+			;
+
+		if( buildEnv !== 'production' ) {
+			stream = stream
+				.pipe( sourcemaps.init({ loadMaps: true }) )
+				.pipe( sourcemaps.write( './' ) )
+		}
+
+		stream = stream
+			.pipe( gulp.dest( `${ outputDir }` ) )
+			;
+
+		return stream;
+	}
+}
 
 
 
@@ -111,7 +124,7 @@ gulp.task( 'site:assets:jquery', () => {
 	return gulp.src([
 		'node_modules/jquery/dist/jquery.min.js',
 	], { base: 'node_modules/jquery/dist' })
-		.pipe( gulp.dest( `${ outputDir }/${ scriptsOutputDir }` ) )
+		.pipe( gulp.dest( `${ outputDir }` ) )
 		;
 })
 
@@ -119,7 +132,7 @@ gulp.task( 'site:assets:bootstrap:scripts', () => {
 	return gulp.src([
 		'node_modules/bootstrap/dist/js/bootstrap.min.js',
 	], { base: 'node_modules/bootstrap/dist/js' })
-		.pipe( gulp.dest( `${ outputDir }/${ scriptsOutputDir }` ) )
+		.pipe( gulp.dest( `${ outputDir }` ) )
 		;
 });
 
@@ -134,17 +147,25 @@ gulp.task( 'site:assets:bootstrap:fonts', () => {
 //////// Styles
 
 gulp.task( 'site:styles', () => {
-	return gulp.src([ `${ sourceDir }/${ stylesSourceDir }/*.less` ])
-		.pipe( sourcemaps.init() )
+	return gulp.src([
+		`${ sourceDir }/${ stylesSourceDir }/*.less`
+	])
+		.pipe( buildEnv === 'production' ? sourcemaps.init() : gutil.noop() )
 		.pipe( less({
 			paths: [
 				path.join( __dirname, 'node_modules', 'bootstrap', 'less' )
 			],
-			plugins: [ autoprefix ]
 		}))
+		.pipe( postcss([
+				autoprefixer({ browsers: [ 'last 2 versions' ] }),
+			].concat(
+				buildEnv === 'production'
+				? [ cssnano({ safe: true }) ]
+				: []
+		)))
 		.on( 'error', function( err ) { console.error( err.message ); console.error( err.codeFrame ); this.emit( 'end' ); })
-		.pipe( sourcemaps.write( './' ) )
-		.pipe( gulp.dest( `${ outputDir }/${ stylesOutputDir }` ) )
+		.pipe( buildEnv === 'production' ? sourcemaps.write( './' ) : gutil.noop() )
+		.pipe( gulp.dest( `${ outputDir }` ) )
 		;
 });
 
