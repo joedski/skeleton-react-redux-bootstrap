@@ -5,6 +5,53 @@ This is a simple skeleton to start out a barebones React + Redux app with Bootst
 
 
 
+Things
+------
+
+- Scripts are processed with [Browserify](http://browserify.org/), using [Watchify](https://github.com/substack/watchify) to make enable incremental builds during dev.
+- Styles are compiled using [LESS](http://lesscss.org/) (via [gulp-less](https://github.com/plus3network/gulp-less)) and passed through [postcss](https://github.com/postcss/postcss) (via [gulp-postcss](https://github.com/postcss/gulp-postcss)) to handle [autoprefixer](https://github.com/postcss/autoprefixer) and [cssnano](http://cssnano.co/).
+
+
+### Other Things
+
+#### SASS
+
+Install: `npm install --save-dev gulp-sass gulp-if`
+
+Add to build process:
+
+```js
+const less = require( 'gulp-less' );
+const sass = require( 'gulp-sass' );
+
+// ...
+
+// Mixed LESS/SASS/CSS
+gulp.task( 'site:styles', () => {
+	return gulp.src([ /* ... */ ])
+		.pipe( buildEnv === 'production' ? sourcemaps.init() : gutil.noop() )
+		.pipe( gulpIf( /\.less$/, less( /* ... */ ) ) )
+		// Add sass
+		.pipe( gulpIf( /\.(scss|sass)$/, sass( /* config here! */ ) ) )
+		.pipe( postcss( /* ... */ ))
+		// ...
+		;
+});
+
+// Or, pure SASS
+gulp.task( 'site:styles', () => {
+	return gulp.src([ /* ... */ ])
+		.pipe( buildEnv === 'production' ? sourcemaps.init() : gutil.noop() )
+		// Add sass
+		.pipe( sass( /* config here! */ ) )
+		.pipe( postcss( /* ... */ ))
+		// ...
+		;
+});
+```
+
+
+
 Dependencies
 ------------
 
