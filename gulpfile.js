@@ -68,8 +68,13 @@ function site_scripts_main( watch ) {
 		debug: buildEnv !== 'production',
 		cache: {}, packageCache: {}
 	})
+		.transform( 'envify' )
 		.transform( 'babelify' )
 		;
+
+	if( buildEnv === 'production' ) {
+		bundler = bundler.transform( 'uglifyify' );
+	}
 
 	if( watch ) {
 		bundler = bundler.plugin( 'watchify' );
