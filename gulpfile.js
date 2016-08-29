@@ -155,7 +155,7 @@ gulp.task( 'site:styles', () => {
 	return gulp.src([
 		`${ sourceDir }/${ stylesSourceDir }/*.less`
 	])
-		.pipe( buildEnv === 'production' ? sourcemaps.init() : gutil.noop() )
+		.pipe( buildEnv !== 'production' ? sourcemaps.init() : gutil.noop() )
 		.pipe( less({
 			paths: [
 				path.join( __dirname, 'node_modules', 'bootstrap', 'less' )
@@ -169,7 +169,7 @@ gulp.task( 'site:styles', () => {
 				: []
 		)))
 		.on( 'error', function( err ) { console.error( err.message ); console.error( err.codeFrame ); this.emit( 'end' ); })
-		.pipe( buildEnv === 'production' ? sourcemaps.write( './' ) : gutil.noop() )
+		.pipe( buildEnv !== 'production' ? sourcemaps.write( './' ) : gutil.noop() )
 		.pipe( gulp.dest( `${ outputDir }` ) )
 		;
 });
