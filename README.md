@@ -8,7 +8,7 @@ This is a simple skeleton to start out a barebones React + Redux app with Bootst
 Things
 ------
 
-- Scripts are processed with [Browserify](http://browserify.org/), using [Watchify](https://github.com/substack/watchify) to make enable incremental builds during dev, and squished using [uglifyify](https://github.com/hughsk/uglifyify).
+- Scripts are processed with [Browserify](http://browserify.org/), using [Watchify](https://github.com/substack/watchify) to make incremental builds during dev, and squished using [uglifyify](https://github.com/hughsk/uglifyify).  [envify](https://github.com/hughsk/envify) subs in environment variables for dead code elimination by uglifyify, and [babelify](https://github.com/babel/babelify) converts your ES6/ESNext to ES5.
 - Styles are compiled using [LESS](http://lesscss.org/) (via [gulp-less](https://github.com/plus3network/gulp-less)) and passed through [postcss](https://github.com/postcss/postcss) (via [gulp-postcss](https://github.com/postcss/gulp-postcss)) to handle [autoprefixer](https://github.com/postcss/autoprefixer) and [cssnano](http://cssnano.co/).
 
 
