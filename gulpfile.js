@@ -61,7 +61,7 @@ gulp.task( 'site:scripts', [
 	'site:scripts:main'
 ]);
 
-gulp.task( 'site:scripts:main', site_scripts_main );
+gulp.task( 'site:scripts:main', () => site_scripts_main() );
 
 function site_scripts_main( watch ) {
 	let bundler = browserify( `${ sourceDir }/${ scriptsSourceDir }/index.js`, {
@@ -78,6 +78,8 @@ function site_scripts_main( watch ) {
 
 	if( watch ) {
 		bundler = bundler.plugin( 'watchify' );
+		bundler.on( 'update', execBundle );
+		bundler.on( 'log', function() { gutil.log.apply( gutil, [ 'watch:app:scripts:combined/bundler:' ].concat( [].slice.call( arguments, 0 ) ) ); });
 	}
 
 	return execBundle();
