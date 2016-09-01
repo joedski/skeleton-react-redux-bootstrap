@@ -26,7 +26,7 @@ const outputDir = 'public';
 const scriptsSourceDir = 'app';
 const stylesSourceDir = 'styles';
 
-const buildEnv = process.NODE_ENV;
+const buildEnv = process.env.NODE_ENV;
 
 
 
